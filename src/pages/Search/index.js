@@ -1,59 +1,67 @@
 import React, { useState } from "react";
-import { Button, Input } from "reactstrap";
-import { DatePicker } from "reactstrap-date-picker";
+import Button from "@mui/material/Button";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
+import useFlightBookingApi from "../../hooks/useFlightBookingApi";
 import Flights from "../../components/Flights";
+import { axiosMethods } from "../../constant/axiosMethods";
+import FullPageLoader from "../../components/FullPageLoader";
 
 import NoSearch from "./NoSearch";
+import AirportInput from "../../components/AirportInput";
 
 const Search = () => {
-    const [original, setOriginal] = useState("");
-    const [destination, setDestination] = useState("");
-    const [date, setDate] = useState(null);
+    const [original, setOriginal] = useState(null);
+    const [destination, setDestination] = useState(null);
+    const [departureDate, setDepartureDate] = useState(null);
 
-    const today = new Date();
-    const flights = [];
+    // get all airports data
+    const {
+        data: allAirports,
+        error,
+        isLoading,
+    } = useFlightBookingApi({
+        route: "/airports/all",
+        method: axiosMethods.GET,
+    });
 
-    const handleChangeOriginal = (e) => {
-        setOriginal(e.target.value);
-    };
+    if (isLoading) {
+        return <FullPageLoader />;
+    }
 
-    const handleChangeDestination = (e) => {
-        setDestination(e.target.value);
-    };
-
-    const handleChangeDate = (value) => {
-        setDate(value);
-    };
+    if (error) {
+        return <div>Error</div>;
+    }
 
     return (
         <div>
-            <Input
-                id="original"
-                name="original"
+            <AirportInput
+                allAirports={allAirports}
+                inputId="originalAirport"
                 value={original}
-                onChange={handleChangeOriginal}
-                placeholder="original"
-                bsSize="lg"
+                onValueChange={(event, newValue) => {
+                    setOriginal(newValue);
+                }}
+                label="Depart from"
             />
-            <Input
-                id="destination"
-                name="destination"
+            <AirportInput
+                allAirports={allAirports}
+                inputId="destinationAirport"
                 value={destination}
-                onChange={handleChangeDestination}
-                placeholder="destination"
-                bsSize="lg"
+                onValueChange={(event, newValue) => {
+                    setDestination(newValue);
+                }}
+                label="Destination"
             />
             <DatePicker
-                id="datePicker"
-                value={date}
-                dateFormat={"DD/MM/YYYY"}
-                name="datePicker"
-                minDate={today}
-                onChange={handleChangeDate}
+                id="departureDate"
+                label="Depature Date"
+                value={departureDate}
+                onChange={(newValue) => setDepartureDate(newValue)}
+                minDate={dayjs()}
             />
-            <Button color="primary">Search</Button>
-
+            <Button variant="contained">Search</Button>
             {flights.lenght > 0 ? <Flights flights={flights} /> : <NoSearch />}
         </div>
     );

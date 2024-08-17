@@ -1,18 +1,29 @@
 import { Routes, Route } from "react-router-dom";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import Booking from "./pages/Booking";
 import Search from "./pages/Search";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+const DARK_THEME = createTheme({
+    palette: {
+        mode: "dark",
+    },
+});
 
 function App() {
     return (
-        <div style={{ backgroundColor: "grey", minHeight: "100vh" }}>
-            <Routes>
-                <Route path="/" element={<Search />} />
-                <Route path="/booking/*" element={<Booking />} />
-            </Routes>
-        </div>
+        <ThemeProvider theme={DARK_THEME}>
+            <CssBaseline />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Routes>
+                    <Route path="/" element={<Search />} />
+                    <Route path="/booking/*" element={<Booking />} />
+                </Routes>
+            </LocalizationProvider>
+        </ThemeProvider>
     );
 }
 

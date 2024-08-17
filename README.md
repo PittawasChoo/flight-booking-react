@@ -2,8 +2,6 @@
 
 Secure flight search and booking system project for applying to full stack developer at 30 Secondstofly.
 
-Secure flight search and booking system project for applying to full stack developer at 30 Secondstofly.
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

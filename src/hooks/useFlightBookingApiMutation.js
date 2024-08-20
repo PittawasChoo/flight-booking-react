@@ -1,10 +1,10 @@
-import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import axios from "axios";
 import { axiosMethods } from "constant/axiosMethods";
 
 const FLIGHT_BOOKING_API_URL = process.env.REACT_APP_FLIGHT_BOOKING_API_URL;
 
-const useFlightBookingApi = ({ route, method, options = null, body = null }) => {
+const useFlightBookingApiMutation = ({ route, method, options = null, body = null }) => {
     const getFetcher = (url) => {
         return axios({
             method,
@@ -19,13 +19,13 @@ const useFlightBookingApi = ({ route, method, options = null, body = null }) => 
         }).then((res) => res.data);
     };
 
-    const { data, error, isLoading } = useSWR(
+    const { data, trigger, error, isMutating } = useSWRMutation(
         `${FLIGHT_BOOKING_API_URL}/api${route}`,
         getFetcher,
         options
     );
 
-    return { data, error, isLoading };
+    return { data, trigger, error, isMutating };
 };
 
-export default useFlightBookingApi;
+export default useFlightBookingApiMutation;

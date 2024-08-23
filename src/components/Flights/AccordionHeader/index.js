@@ -28,7 +28,7 @@ const AccordionHeader = ({ flightRoute, onSelectRoute }) => {
             return uniqLogos[0];
         } else {
             // if flights are from different airlines
-            return "/icons/multiple-airlines.jpg";
+            return "https://www.gstatic.com/flights/airline_logos/70px/multi.png";
         }
     }
 

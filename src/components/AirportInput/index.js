@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -41,7 +42,7 @@ const AirportInput = ({
     return (
         <Autocomplete
             id={inputId}
-            noOptionsText="No matching airports found"
+            noOptionsText="No airports found"
             options={allAirports}
             value={value}
             onChange={onValueChange}
@@ -60,11 +61,13 @@ const AirportInput = ({
                 return (
                     <Box key={key} component="li" {...optionProps}>
                         <div>
-                            {option.airportName} ({option.airportCode})
+                            <div>
+                                {option.airportName} ({option.airportCode})
+                            </div>
+                            <SmallOptionText>
+                                {option.cityName}, {option.countryName}({option.countryCode})
+                            </SmallOptionText>
                         </div>
-                        <SmallOptionText>
-                            {option.cityName}, {option.countryName}({option.countryCode})
-                        </SmallOptionText>
                     </Box>
                 );
             }}

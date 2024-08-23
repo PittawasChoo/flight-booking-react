@@ -1,15 +1,52 @@
 import styled from "styled-components";
 
 export const RouteDetailWrapper = styled.div`
-    padding-top: 10px;
+    position: fixed;
+    width: 360px;
+`;
+
+export const RouteDetailHeader = styled.div`
+    padding: 15px 15px;
+    border-bottom: 1px solid rgb(100, 100, 100);
+    text-align: center;
+    font-size: 20px;
+`;
+
+export const FlightSummaryWrapper = styled.div`
+    border-bottom: 1px solid rgb(100, 100, 100);
+    padding: 10px 10px;
+`;
+
+export const FlightSummaryTextWrapper = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+export const FlightSummaryText = styled.div`
+    margin-right: 10px;
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+`;
+
+export const FlightDetail = styled.div`
+    font-size: 14px;
+    padding: 0 10px;
+`;
+
+export const TimeWrapper = styled.div`
+    width: 70px;
+`;
+
+export const TotalWrapper = styled.div`
+    padding: 20px 20px;
 `;
 
 export const LayOver = styled.div`
-    margin-left: 150px;
+    color: rgb(200, 200, 200);
     border-top: 1px solid rgb(100, 100, 100);
     border-bottom: 1px solid rgb(100, 100, 100);
-    padding: 15px 0;
-    font-size: 14px;
+    padding: 10px 0;
+    font-size: 12px;
     display: flex;
     align-items: center;
 `;
@@ -24,20 +61,8 @@ export const LayOverSeparator = styled.div`
 
 export const FlightWrapper = styled.div`
     display: flex;
-    padding: 10px 40px;
+    padding: 10px 0px;
     align-items: center;
-`;
-
-export const AirlineLogoWrapper = styled.div`
-    margin-right: 40px;
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
 `;
 
 export const DepartureWrapper = styled.div`
@@ -50,7 +75,7 @@ export const TextSeparator = styled.div`
     height: 3px;
     background-color: white;
     border-radius: 50%;
-    margin: 0 8px;
+    margin: 0 8px 0 0;
 `;
 
 export const TravelTimeWrapper = styled.div`
@@ -70,7 +95,7 @@ export const TravelTimeDot = styled.div`
 export const TravelTimeText = styled.div`
     margin-left: 10px;
     color: rgb(100, 100, 100);
-    font-size: 14px;
+    font-size: 12px;
 `;
 
 export const ArrivalWrapper = styled.div`
@@ -82,7 +107,7 @@ export const ArrivalWrapper = styled.div`
 export const FlightDetailWrapper = styled.div`
     margin-left: 20px;
     color: rgb(100, 100, 100);
-    font-size: 14px;
+    font-size: 12px;
     display: flex;
     align-items: center;
 `;
@@ -93,11 +118,4 @@ export const FlightDetailSeparator = styled.div`
     background-color: rgb(100, 100, 100);
     border-radius: 50%;
     margin: 0 6px;
-`;
-
-export const ButtonWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
 `;

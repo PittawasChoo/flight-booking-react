@@ -1,7 +1,9 @@
 import React from "react";
 
+import { TextWrapper } from "./styles";
+
 const NoSearch = () => {
-    return <div>No Search</div>;
+    return <TextWrapper>Select airports and departure date to start searching</TextWrapper>;
 };
 
 export default NoSearch;

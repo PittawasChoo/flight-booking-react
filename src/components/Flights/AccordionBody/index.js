@@ -1,24 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
+
+import Button from "@mui/material/Button";
 import dayjs from "dayjs";
+
 import { formatDuration, formatToTime } from "modules/dateAndTime";
 
 import {
     AirlineLogoWrapper,
     ArrivalWrapper,
+    ButtonWrapper,
     DepartureWrapper,
     FlightDetailSeparator,
     FlightDetailWrapper,
     FlightWrapper,
     LayOver,
     LayOverSeparator,
+    RouteDetailWrapper,
     TextSeparator,
     TravelTimeDot,
-    TravelTimeWrapper,
     TravelTimeText,
+    TravelTimeWrapper,
 } from "./styles";
 
-const AccordionBody = ({ flightsInRoute }) => {
+const AccordionBody = ({ flightsInRoute, onSelectRoute }) => {
     function getLayoverTime(firstDateTime, secondsDateTime) {
         const timeDiff = dayjs(secondsDateTime).diff(firstDateTime);
         const timeDiffInMinutes = Math.floor(timeDiff / 60000);
@@ -26,10 +31,10 @@ const AccordionBody = ({ flightsInRoute }) => {
     }
 
     return (
-        <>
+        <RouteDetailWrapper>
             {flightsInRoute.map((flight, index) => {
                 return (
-                    <>
+                    <div key={index}>
                         {index > 0 && (
                             <LayOver>
                                 <div>
@@ -86,15 +91,28 @@ const AccordionBody = ({ flightsInRoute }) => {
                                 </FlightDetailWrapper>
                             </div>
                         </FlightWrapper>
-                    </>
+                    </div>
                 );
             })}
-        </>
+            <ButtonWrapper>
+                <Button
+                    variant="outlined"
+                    size="sm"
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        onSelectRoute();
+                    }}
+                >
+                    Select Flight
+                </Button>
+            </ButtonWrapper>
+        </RouteDetailWrapper>
     );
 };
 
 AccordionBody.propTypes = {
-    flightsInRoute: PropTypes.array,
+    flightsInRoute: PropTypes.array.isRequired,
+    onSelectRoute: PropTypes.func.isRequired,
 };
 
 export default AccordionBody;

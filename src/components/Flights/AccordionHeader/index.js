@@ -1,10 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import Button from "@mui/material/Button";
 import pluralize from "pluralize";
-import { createSearchParams } from "react-router-dom";
-import { uniq } from "lodash";
-import { useNavigate } from "react-router-dom";
+import { get, uniq } from "lodash";
 
 import { formatDuration, formatToTime } from "modules/dateAndTime";
 
@@ -17,8 +16,8 @@ import {
     AccordionTopicWrapper,
 } from "./styles";
 
-const AccordionHeader = ({ flightsInRoute, flightRoute }) => {
-    const navigate = useNavigate();
+const AccordionHeader = ({ flightRoute, onSelectRoute }) => {
+    const flightsInRoute = get(flightRoute, "flights", []);
 
     function getAirlineLogo(flightsInRoute) {
         const allFlightLogos = flightsInRoute.map((flight) => flight.airlineLogo);
@@ -76,13 +75,7 @@ const AccordionHeader = ({ flightsInRoute, flightRoute }) => {
                     size="sm"
                     onClick={(event) => {
                         event.stopPropagation();
-                        const path = {
-                            pathname: "/booking",
-                            search: createSearchParams({
-                                flights: flightsInRoute.map((flight) => flight.id).join(","),
-                            }).toString(),
-                        };
-                        navigate(path);
+                        onSelectRoute();
                     }}
                 >
                     Select Flight
@@ -93,8 +86,8 @@ const AccordionHeader = ({ flightsInRoute, flightRoute }) => {
 };
 
 AccordionHeader.propTypes = {
-    flightsInRoute: PropTypes.array,
-    flightRoute: PropTypes.object,
+    flightRoute: PropTypes.object.isRequired,
+    onSelectRoute: PropTypes.func.isRequired,
 };
 
 export default AccordionHeader;

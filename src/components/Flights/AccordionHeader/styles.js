@@ -30,6 +30,7 @@ export const AccordionTopicAirlineLogoWrapper = styled.div`
 `;
 
 export const AccordionTopicTravelTime = styled.div`
+    padding-top: 5px;
     font-size: 18px;
 `;
 

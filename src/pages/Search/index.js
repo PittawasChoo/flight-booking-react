@@ -1,18 +1,23 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
+
 import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { get } from "lodash";
 
-import useFlightBookingApi from "hooks/useFlightBookingApi";
-import useFlightBookingApiMutation from "hooks/useFlightBookingApiMutation";
-
 import AirportInput from "components/AirportInput";
 import Flights from "components/Flights";
 import FullPageLoader from "components/FullPageLoader";
+import NavBar from "components/NavBar";
+import SpinnerButton from "components/SpinnerButton";
 
 import { axiosMethods } from "constant/axiosMethods";
 
+import useFlightBookingApi from "hooks/useFlightBookingApi";
+import useFlightBookingApiMutation from "hooks/useFlightBookingApiMutation";
+
+import { sanitize } from "modules/text";
+
+import Loading from "./Loading";
 import NoSearch from "./NoSearch";
 import { Banner, BannerFade, BannerText, ContentWrapper, Content, InputWrapper } from "./styles";
 
@@ -21,13 +26,11 @@ const Search = () => {
     const [destination, setDestination] = useState(null);
     const [departureDate, setDepartureDate] = useState(null);
     const [showError, setShowError] = useState(false);
+    const [isFetched, setIsFetched] = useState(false);
+    const [searchError, setSearchError] = useState(null);
 
     // get all airports data
-    const {
-        data: allAirports,
-        error,
-        isLoading,
-    } = useFlightBookingApi({
+    const { data: allAirports, isLoading } = useFlightBookingApi({
         route: "/airports/all",
         method: axiosMethods.GET,
     });
@@ -36,15 +39,20 @@ const Search = () => {
     const {
         data: searchResult,
         trigger: search,
-        error: searchError,
         isMutating,
     } = useFlightBookingApiMutation({
         route: "/flights/search",
         method: axiosMethods.GET,
         body: {
-            originalAirportCode: get(original, "airportCode", ""),
-            destinationAirportCode: get(destination, "airportCode"),
-            departureDate: dayjs(departureDate).format("YYYY-MM-DD"),
+            originalAirportCode: sanitize(get(original, "airportCode", "")),
+            destinationAirportCode: sanitize(get(destination, "airportCode")),
+            departureDate: sanitize(dayjs(departureDate).format("YYYY-MM-DD")),
+        },
+        options: {
+            onError: (err) => {
+                setSearchError(err);
+            },
+            onComplete: () => setSearchError(null),
         },
     });
 
@@ -52,22 +60,16 @@ const Search = () => {
         return <FullPageLoader />;
     }
 
-    if (error) {
-        return <div>Error</div>;
-    }
-
     const getContent = () => {
-        if (!searchResult) {
+        if (!isFetched) {
             return <NoSearch />;
         }
 
-        if (isMutating) {
-            return <div>searching...</div>;
+        if (isMutating && !searchResult) {
+            return <Loading />;
         }
 
-        if (searchResult) {
-            return <Flights error={searchError} flights={searchResult} />;
-        }
+        return <Flights flights={searchResult} error={searchError} />;
     };
 
     const validateInput = () => {
@@ -76,6 +78,7 @@ const Search = () => {
             setShowError(true);
         } else {
             setShowError(false);
+            setIsFetched(true);
             search();
         }
     };
@@ -85,7 +88,7 @@ const Search = () => {
             return "Please select departure date";
         }
 
-        if (showError && !departureDate) {
+        if (showError && departureDate < new Date()) {
             return "Selected date is in valid";
         }
 
@@ -94,6 +97,7 @@ const Search = () => {
 
     return (
         <>
+            <NavBar />
             <Banner>
                 <BannerFade />
             </Banner>
@@ -102,7 +106,10 @@ const Search = () => {
                 <Content>
                     <InputWrapper>
                         <AirportInput
-                            allAirports={allAirports}
+                            allAirports={(allAirports || []).filter(
+                                (airport) =>
+                                    airport.airportCode !== get(destination, "airportCode", "")
+                            )}
                             inputId="originalAirport"
                             value={original}
                             onValueChange={(event, newValue) => {
@@ -110,10 +117,15 @@ const Search = () => {
                             }}
                             label="Depart from"
                             error={showError && !original}
-                            helperText={showError && !original && "Please select original airport"}
+                            helperText={
+                                showError && !original ? "Please select original airport" : ""
+                            }
                         />
                         <AirportInput
-                            allAirports={allAirports}
+                            allAirports={(allAirports || []).filter(
+                                (airport) =>
+                                    airport.airportCode !== get(original, "airportCode", "")
+                            )}
                             inputId="destinationAirport"
                             value={destination}
                             onValueChange={(event, newValue) => {
@@ -122,11 +134,10 @@ const Search = () => {
                             label="Destination"
                             error={showError && !destination}
                             helperText={
-                                showError && !destination && "Please select destination airport"
+                                showError && !destination ? "Please select destination airport" : ""
                             }
                         />
                         <DatePicker
-                            error
                             id="departureDate"
                             label="Depature Date"
                             value={departureDate}
@@ -134,14 +145,15 @@ const Search = () => {
                             disablePast
                             slotProps={{
                                 textField: {
-                                    error: showError && !departureDate,
+                                    error:
+                                        showError && (!departureDate || departureDate < new Date()),
                                     helperText: getDatePickerErrorText(),
                                 },
                             }}
                         />
-                        <Button variant="contained" onClick={validateInput}>
+                        <SpinnerButton onClick={validateInput} loading={isMutating}>
                             Search
-                        </Button>
+                        </SpinnerButton>
                     </InputWrapper>
                     {getContent()}
                 </Content>

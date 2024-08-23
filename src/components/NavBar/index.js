@@ -6,14 +6,15 @@ import LoginModal from "components/LoginModal";
 
 import { AuthContext } from "contexts/AuthContext";
 
+import { NavBarWrapper } from "./styles";
+
 const NavBar = () => {
     const [showModal, setShowModal] = useState(false);
 
     const { user, logout } = useContext(AuthContext);
-    console.log("user", user);
 
     return (
-        <div style={{ display: "flex", justifyContent: "flex-end", padding: "5px 10px" }}>
+        <NavBarWrapper>
             {showModal && (
                 <LoginModal
                     onClose={() => setShowModal(false)}
@@ -26,7 +27,7 @@ const NavBar = () => {
             ) : (
                 <Button onClick={() => setShowModal(true)}>Log In</Button>
             )}
-        </div>
+        </NavBarWrapper>
     );
 };
 

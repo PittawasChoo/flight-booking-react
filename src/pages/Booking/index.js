@@ -73,7 +73,6 @@ const Booking = () => {
 
     const selectedFlights = searchParams.get("flights") || "";
     const flights = selectedFlights.split(",");
-    console.log("flights", flights);
 
     // book flight route
     const { trigger: submitForm, isMutating } = useFlightBookingApiMutation({
@@ -126,7 +125,6 @@ const Booking = () => {
     }
 
     if (pageError.isError) {
-        console.log("pageError.error", pageError.error);
         const errorStatus = get(pageError, "error.response.status");
 
         if (errorStatus === 401) {

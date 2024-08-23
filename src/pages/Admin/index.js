@@ -12,6 +12,8 @@ import { axiosMethods } from "constant/axiosMethods";
 
 import useFlightBookingApi from "hooks/useFlightBookingApi";
 
+import { Header, LastRow, Root } from "./styles";
+
 const Admin = () => {
     const [error, setError] = useState({ isError: false, err: null });
 
@@ -44,20 +46,20 @@ const Admin = () => {
     }
 
     return (
-        <div style={{ fontSize: "20px", textAlign: "center", paddingTop: "200px" }}>
-            <div style={{ fontSize: "30px", marginBottom: "40px" }}>
+        <Root>
+            <Header>
                 <b>Admin page</b>
-            </div>
+            </Header>
 
             <div>Only user with admin role can access this page</div>
             <div>The permission to access this page was defined from backend</div>
-            <div style={{ marginBottom: "40px" }}>
+            <LastRow>
                 No permission condition logic in front-end code and no role encrypted in token
-            </div>
+            </LastRow>
             <Button variant="contained" size="md" onClick={() => navigate("/")}>
                 Back to main page
             </Button>
-        </div>
+        </Root>
     );
 };
 
